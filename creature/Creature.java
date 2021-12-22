@@ -12,11 +12,13 @@ public abstract class Creature extends Thing implements Runnable {
 
 	protected int health, power, maxHp, dir;
 	protected PlayScreen screen;
+	protected boolean ispause;
 	
 	Creature(Color color, char glyph, World world, PlayScreen screen) {
         super(color, glyph, world);
         this.screen = screen;
         dir = 0;
+        ispause = false;
     }
 
     public void moveTo(int xPos, int yPos) {
@@ -45,6 +47,10 @@ public abstract class Creature extends Thing implements Runnable {
 	
 	public int getMaxHp() {
 		return maxHp;
+	}
+	
+	public void pause() {
+		ispause = !ispause;
 	}
 	
 }

@@ -23,7 +23,8 @@ public class Monster extends Creature {
 		try {
 			while(health > 0) {
 				TimeUnit.MILLISECONDS.sleep(500);
-				action();
+				if(!ispause)
+					action();
 			}
 		}catch(InterruptedException e) {
 			System.out.println("Monster thread error");

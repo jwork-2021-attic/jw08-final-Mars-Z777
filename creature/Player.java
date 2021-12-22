@@ -23,9 +23,9 @@ public class Player extends Creature {
 	public void run() {
 		try {
 			while(true) {
-				TimeUnit.MILLISECONDS.sleep(10);
 				if(health <= 0)
 					screen.lose();
+				TimeUnit.MILLISECONDS.sleep(10);
 			}
 		}catch(InterruptedException e) {
 			System.out.println("Player thread error");
@@ -33,6 +33,8 @@ public class Player extends Creature {
 	}
 	
 	public synchronized void move(int dir) {
+		if(ispause)
+			return;
 		if(dir < 0 || dir >=4)
 			return;
 		this.dir = dir;
@@ -58,6 +60,8 @@ public class Player extends Creature {
 	}
 	
 	public synchronized void attack() {
+		if(ispause)
+			return;
 		if(lastshoottime == -1)
 			lastshoottime = System.currentTimeMillis();
 		else {

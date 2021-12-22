@@ -32,6 +32,7 @@ public class PlayScreen implements Screen {
 	private int top;
 	private int left;
 	private int monsterNum;
+	private boolean ispause;
     
     public PlayScreen() {
     	win = false;
@@ -49,6 +50,7 @@ public class PlayScreen implements Screen {
     	top = 6;
     	left = 43;
     	monsterNum = 15;
+    	ispause = false;
     	
     	controller = new GameControl(this);
     	controller.start();
@@ -65,14 +67,20 @@ public class PlayScreen implements Screen {
     	String a = "A: left";
     	String d = "D: right";
     	String j = "J: shoot";
+    	String status = "Status: ";
     	terminal.write(h, left, top);
     	terminal.write(p, left, top + 2);
-    	terminal.write(ins, left, top + 10);
-    	terminal.write(w, left, top + 12);
-    	terminal.write(s, left, top + 14);
-    	terminal.write(a, left, top + 16);
-    	terminal.write(d, left, top + 18);
-    	terminal.write(j, left, top + 20);
+    	terminal.write(status, left, top + 8);
+    	if(ispause)
+    		terminal.write("Pause", left + 9, top + 8);
+    	else
+    		terminal.write("Running", left + 9, top + 8);
+    	terminal.write(ins, left, top + 12);
+    	terminal.write(w, left, top + 14);
+    	terminal.write(s, left, top + 16);
+    	terminal.write(a, left, top + 18);
+    	terminal.write(d, left, top + 20);
+    	terminal.write(j, left, top + 22);
     }
     
 	@Override
@@ -109,6 +117,12 @@ public class PlayScreen implements Screen {
 		case KeyEvent.VK_J:
 			player.attack();
 			break;
+		case KeyEvent.VK_ESCAPE:
+			ispause = !ispause;
+			player.pause();
+			for(Monster m : monsters)
+				m.pause();
+			break;
 		}
 		return this;
 	}
@@ -138,6 +152,8 @@ public class PlayScreen implements Screen {
     }
     
     public void update() {
+    	if(ispause)
+    		return;
     	speedcount++;
     	if(speedcount == speed) {
     		for(Bullet b : bullets)
