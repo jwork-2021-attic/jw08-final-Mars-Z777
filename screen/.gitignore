@@ -4,3 +4,10 @@
 /Screen.class
 /StartScreen.class
 /WinScreen.class
+/DataScreen.class
+/PauseScreen.class
+/SelectScreen.class
+/SelectMapScreen.class
+/SelectSaveScreen.class
+/LoadScreen.class
+/SaveScreen.class

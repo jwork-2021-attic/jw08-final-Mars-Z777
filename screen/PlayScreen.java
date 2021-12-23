@@ -11,11 +11,12 @@ import world.World;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements Screen{
 
 	private World world;
 	private Player player;
@@ -34,10 +35,10 @@ public class PlayScreen implements Screen {
 	private int monsterNum;
 	private boolean ispause;
     
-    public PlayScreen() {
+    public PlayScreen(String map) {
     	win = false;
     	lose = false;
-    	world = new World();
+    	world = new World(map);
     	player = new Player(new Color(255, 0, 0), world, this);
     	world.put(player, 0, 0);
     	finish = new Finish(new Color(255, 0, 0), world);
@@ -57,6 +58,41 @@ public class PlayScreen implements Screen {
     	for(int i = 0; i < monsterNum; i++)
     		addMonster();
     }
+    
+    public PlayScreen(World w, Player p, ArrayList<Monster> ms, CopyOnWriteArrayList<Bullet> bs) {
+    	win = false;
+    	lose = false;
+    	ispause = true;
+    	world = w;
+    	player = p;
+    	p.setScreen(this);
+    	p.setState(ispause);
+    	p.setWorld(w);
+    	world.put(player, p.getX(), p.getY());
+    	finish = new Finish(new Color(255, 0, 0), world);
+    	world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
+    	bullets = bs;
+    	for(int i = 0; i < bs.size(); i++) {
+    		bs.get(i).setScreen(this);
+    		bs.get(i).setWorld(w);
+    	}
+    	deleteBullets = new CopyOnWriteArrayList<Bullet>();
+    	props = new CopyOnWriteArrayList<Prop>();
+    	deleteProps = new CopyOnWriteArrayList<Prop>();
+    	monsters = ms;
+    	top = 6;
+    	left = 43;
+    	monsterNum = ms.size();
+    	
+    	controller = new GameControl(this);
+    	controller.start();
+    	for(int i = 0; i < monsterNum; i++) {
+    		monsters.get(i).setScreen(this);
+    		monsters.get(i).setState(ispause);
+    		monsters.get(i).setWorld(w);
+    		addMonster(monsters.get(i));
+    	}
+    }
 	
     private void messageUpdate(AsciiPanel terminal) {
     	String h = String.format("Hp: %2d/%2d", player.getHealth(), player.getMaxHp());
@@ -72,9 +108,9 @@ public class PlayScreen implements Screen {
     	terminal.write(p, left, top + 2);
     	terminal.write(status, left, top + 8);
     	if(ispause)
-    		terminal.write("Pause", left + 9, top + 8);
+    		terminal.write("Pause", left + 8, top + 8);
     	else
-    		terminal.write("Running", left + 9, top + 8);
+    		terminal.write("Running", left + 8, top + 8);
     	terminal.write(ins, left, top + 12);
     	terminal.write(w, left, top + 14);
     	terminal.write(s, left, top + 16);
@@ -119,9 +155,11 @@ public class PlayScreen implements Screen {
 			break;
 		case KeyEvent.VK_ESCAPE:
 			ispause = !ispause;
-			player.pause();
+			player.setState(ispause);
 			for(Monster m : monsters)
-				m.pause();
+				m.setState(ispause);
+			if(ispause)
+				return new PauseScreen(this);
 			break;
 		}
 		return this;
@@ -177,6 +215,18 @@ public class PlayScreen implements Screen {
     	return player;
     }
     
+    public World getWorld() {
+    	return world;
+    }
+    
+    public ArrayList<Monster> getMonsters(){
+    	return monsters;
+    }
+    
+    public CopyOnWriteArrayList<Bullet> getBullets(){
+    	return bullets;
+    }
+    
     public void addMonster() {
     	Random r = new Random();
     	int x = r.nextInt(World.WIDTH);
@@ -191,8 +241,22 @@ public class PlayScreen implements Screen {
     	controller.addMonster(m);
     }
     
+    public void addMonster(Monster m) {
+    	monsters.add(m);
+    	world.put(m, m.getX(), m.getY());
+    	controller.addMonster(m);
+    }
+    
     public void deleteMonster(Monster m) {
     	monsters.remove(m);
+    }
+    
+    public int getMonNum() {
+    	return monsters.size();
+    }
+    
+    public int getBulletNum() {
+    	return bullets.size();
     }
     
 }

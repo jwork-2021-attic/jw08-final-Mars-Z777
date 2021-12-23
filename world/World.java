@@ -1,27 +1,50 @@
 package world;
 
 import maze.*;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.Serializable;
 import java.lang.Math;
 
 import creature.Creature;
 
-public class World {
+public class World implements Serializable {
 
     public final static int WIDTH = 40;
     public final static int HEIGHT = 40;
 
     private Tile<Thing>[][] tiles;
+    public static int[][] Maze;
 
-    public World() {
+    public World(String map) {
 
         if (tiles == null) {
             tiles = new Tile[WIDTH][HEIGHT];
         }
-
-        int dim = Math.min(WIDTH, HEIGHT);
-        MazeGenerator MG = new MazeGenerator(dim);
-        MG.generateMaze();
-        int[][] Maze = MG.getIntMaze();
+        if(map == "") {
+        	int dim = Math.min(WIDTH, HEIGHT);
+        	MazeGenerator MG = new MazeGenerator(dim);
+        	MG.generateMaze();
+        	Maze = MG.getIntMaze();
+        }
+        else {
+        	Maze = new int[WIDTH][HEIGHT];
+        	try {
+				BufferedReader in = new BufferedReader(new FileReader(map));
+				String tmp = "";
+				int i = 0;
+				while((tmp = in.readLine()) != null) {
+					String[] l = tmp.split(" ");
+					for(int j = 0; j < HEIGHT; j++)
+						Maze[i][j] = Integer.valueOf(l[j]);
+					i++;
+				}
+				in.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
         
         for(int i = 0; i < WIDTH; i++) {
         	for(int j = 0; j < HEIGHT; j++) {

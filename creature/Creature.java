@@ -1,17 +1,17 @@
 package creature;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 import screen.PlayScreen;
-import world.Bullet;
 import world.Floor;
 import world.Thing;
 import world.World;
 
-public abstract class Creature extends Thing implements Runnable {
+public abstract class Creature extends Thing implements Runnable, Serializable {
 
 	protected int health, power, maxHp, dir;
-	protected PlayScreen screen;
+	protected transient PlayScreen screen;
 	protected boolean ispause;
 	
 	Creature(Color color, char glyph, World world, PlayScreen screen) {
@@ -49,8 +49,20 @@ public abstract class Creature extends Thing implements Runnable {
 		return maxHp;
 	}
 	
-	public void pause() {
-		ispause = !ispause;
+	public void setState(boolean s) {
+		ispause = s;
+	}
+	
+	public boolean getS() {
+		return ispause;
+	}
+	
+	public void setScreen(PlayScreen p) {
+		screen = p;
+	}
+
+    public void setWorld(World w) {
+		world = w;
 	}
 	
 }

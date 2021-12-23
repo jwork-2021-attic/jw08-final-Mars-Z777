@@ -1,8 +1,11 @@
 package world;
 
 import java.awt.Color;
+import java.io.Serializable;
 
-public class Thing {
+import screen.PlayScreen;
+
+public class Thing implements Serializable {
 
 	public static final int[][] dirs = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
 	
@@ -39,5 +42,5 @@ public class Thing {
     public char getGlyph() {
         return this.glyph;
     }
-
+    
 }

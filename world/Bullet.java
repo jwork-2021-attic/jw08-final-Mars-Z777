@@ -8,7 +8,7 @@ import screen.PlayScreen;
 
 public class Bullet extends Thing {
 
-	private PlayScreen screen;
+	private transient PlayScreen screen;
 	private int dir;
 	private int damage;
 	private Creature parent;
@@ -42,7 +42,6 @@ public class Bullet extends Thing {
 		if(type == 1)
 			this.moveTo(x, y);
 		else if(type == 0 || type == 2 || type == -1) {
-			//screen.deleteBullet(this);
 			this.changeDir();
 		}
 		else if(type == 3) {
@@ -63,4 +62,12 @@ public class Bullet extends Thing {
 		}
 	}
 
+	public void setScreen(PlayScreen p) {
+		screen = p;
+	}
+
+    public void setWorld(World w) {
+		world = w;
+	}
+	
 }

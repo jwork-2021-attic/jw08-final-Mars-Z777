@@ -43,8 +43,9 @@ public class Player extends Creature {
 		int status = world.posJudge(x, y);
 		if(status == 0)
 			screen.win();
-		else if(status == 1)
+		else if(status == 1) {
 			this.moveTo(x, y);
+		}
 		else if(status == 5) {
 			Prop p = (Prop)world.get(x, y);
 			if(p instanceof Cure) {

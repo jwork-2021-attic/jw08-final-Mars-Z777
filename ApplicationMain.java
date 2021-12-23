@@ -19,7 +19,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
         terminal = new AsciiPanel(60, 40, AsciiFont.TALRYTH_15_15);
         add(terminal);
         pack();
-        screen = new StartScreen();
+        screen = new StartScreen(this);
         addKeyListener(this);
         repaint();
     }
@@ -37,8 +37,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
      * @param e
      */
     public void keyPressed(KeyEvent e) {
-        screen = screen.respondToUserInput(e);
-        repaint();
+    	screen = screen.respondToUserInput(e);
     }
 
     /**
