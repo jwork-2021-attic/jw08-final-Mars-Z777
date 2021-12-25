@@ -53,6 +53,24 @@ public class World implements Serializable {
         	}
         }
     }
+    
+    public World(long seed) {
+    	if (tiles == null) {
+            tiles = new Tile[WIDTH][HEIGHT];
+        }
+    	
+        int dim = Math.min(WIDTH, HEIGHT);
+        MazeGenerator MG = new MazeGenerator(dim, seed);
+        MG.generateMaze();
+        Maze = MG.getIntMaze();
+        
+        for(int i = 0; i < WIDTH; i++) {
+        	for(int j = 0; j < HEIGHT; j++) {
+        		tiles[i][j] = new Tile<>(i, j);
+        		tiles[i][j].setThing(Maze[i][j] == 1 ? new Floor(this): new Wall(this));
+        	}
+        }
+    }
 
     public Thing get(int x, int y) {
         return this.tiles[x][y].getThing();

@@ -2,6 +2,7 @@ package screen;
 
 import asciiPanel.AsciiPanel;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public interface Screen {
 

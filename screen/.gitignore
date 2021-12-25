@@ -11,3 +11,6 @@
 /SelectSaveScreen.class
 /LoadScreen.class
 /SaveScreen.class
+/SelectServerScreen.class
+/ServerScreen.class
+/SelectClientScreen.class

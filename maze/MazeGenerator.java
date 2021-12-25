@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class MazeGenerator {
     
     private Stack<Node> stack = new Stack<>();
-    private Random rand = new Random();
+    private Random rand;
     private int[][] maze;
     private int[][] myMaze;
     private int dimension;
@@ -20,6 +20,16 @@ public class MazeGenerator {
         maze = new int[dim][dim];
         myMaze = new int[myDim][myDim];
         dimension = dim;
+        rand = new Random();
+    }
+    
+    public MazeGenerator(int dim, long seed) {
+    	myDim = dim;
+    	dim /= 2;
+        maze = new int[dim][dim];
+        myMaze = new int[myDim][myDim];
+        dimension = dim;
+        rand = new Random(seed);
     }
 
     public void generateMaze() {
