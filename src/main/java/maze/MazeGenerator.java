@@ -43,6 +43,8 @@ public class MazeGenerator {
             }
         }
         maze[dimension - 1][dimension - 1] = 1;
+        maze[0][dimension - 1] = 1;
+        maze[dimension - 1][0] = 1;
         for(int i = 0; i < myDim; i++) {
         	for(int j = 0; j < myDim;j++) {
         		myMaze[i][j] = maze[i / 2][j / 2];

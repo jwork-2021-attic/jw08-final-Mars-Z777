@@ -4,9 +4,9 @@ import asciiPanel.AsciiPanel;
 
 public class WinScreen extends RestartScreen {
 
-    @Override
+	@Override
     public void displayOutput(AsciiPanel terminal) {
-        terminal.write("You won! Press enter to go again.", 0, 0);
+        terminal.write("You won!", 0, 0);
     }
     
     public void update() {

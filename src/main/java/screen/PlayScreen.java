@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+
+import javax.swing.JOptionPane;
 
 public class PlayScreen implements Screen{
 
@@ -39,12 +42,11 @@ public class PlayScreen implements Screen{
 	private int monsterNum;
 	private boolean ispause;
 	
-	private int playerId;
+	private int playerId = 1;
 	private long mapSeed;
-	private Server server;
 	private Client client;
-	private boolean isRunning = false;
 	private boolean isMulti = false;
+	private boolean isRunning = false;
     
     public PlayScreen(String map) {
     	win = false;
@@ -107,7 +109,7 @@ public class PlayScreen implements Screen{
     
     public PlayScreen(int id) throws IOException, InterruptedException{
     	isMulti = true;
-    	playerId = id;    
+    	playerId = id;
     	client = new Client(this, playerId);
     	client.start();
     	Listener lis = new Listener(client);
@@ -116,11 +118,14 @@ public class PlayScreen implements Screen{
     	player = new Player(new Color(255, 0, 0), world, this);
     	player2 = new Player(new Color(0, 0, 255), world, this);
     	player3 = new Player(new Color(255, 255, 0), world, this);
+    	player.setState(true);
+    	player2.setState(true);
+    	player3.setState(true);
     	world.put(player, 0, 0);
     	world.put(player2, 0, world.HEIGHT - 1);
     	world.put(player3, world.WIDTH - 1, 0);
     	finish = new Finish(new Color(255, 0, 0), world);
-    	world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
+    	// world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
     	bullets = new CopyOnWriteArrayList<Bullet>();
     	deleteBullets = new CopyOnWriteArrayList<Bullet>();
     	props = new CopyOnWriteArrayList<Prop>();
@@ -133,16 +138,21 @@ public class PlayScreen implements Screen{
     	controller = new GameControl(this);
     }
     
-    public void start() {
+    public void start() throws IOException {
     	if(!isRunning) {
     		controller.start();
+    		// for(int i = 0; i < monsterNum; i++)
+    		// 	addMonster();
+    		player.setState(false);
+    		player2.setState(false);
+    		player3.setState(false);
     		isRunning = true;
     	}
     }
 	
     private void messageUpdate(AsciiPanel terminal) {
-    	String h = String.format("Hp: %2d/%2d", player.getHealth(), player.getMaxHp());
-    	String p = String.format("Power: %d", player.getPower());
+    	String h = String.format("Hp: %2d/%2d", getPlayer(playerId).getHealth(), getPlayer(playerId).getMaxHp());
+    	String p = String.format("Power: %d", getPlayer(playerId).getPower());
     	String ins = "Instructions:";
     	String w = "W: up";
     	String s = "S: down";
@@ -180,6 +190,8 @@ public class PlayScreen implements Screen{
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
 		if(isMulti) {
+			if(multiWin())
+				JOptionPane.showMessageDialog(null, "You are the winner!");
 			try {
 				client.action(key.getKeyCode());
 			} catch (IOException e) {
@@ -295,6 +307,20 @@ public class PlayScreen implements Screen{
     	controller.addMonster(m);
     }
     
+    public void addMonster(long seed) {
+    	Random r = new Random(seed);
+    	int x = r.nextInt(World.WIDTH);
+    	int y = r.nextInt(World.HEIGHT);
+    	while(world.posJudge(x, y) != 1) {
+    		x = r.nextInt(World.WIDTH);
+    		y = r.nextInt(World.HEIGHT);
+    	}
+    	Monster m = new Monster(new Color(0, 255, 0), world, this, seed);
+    	monsters.add(m);
+    	world.put(m, x, y);
+    	controller.addMonster(m);
+    }
+    
     public void addMonster(Monster m) {
     	monsters.add(m);
     	world.put(m, m.getX(), m.getY());
@@ -365,4 +391,12 @@ public class PlayScreen implements Screen{
     	}
     }
     
+    private boolean multiWin() {
+    	Player p = getPlayer(playerId);
+    	Player x = getPlayer(playerId % 3 + 1);
+    	Player y = getPlayer((playerId + 1) % 3 + 1);
+    	if(p.getHealth() > 0 && x.getHealth() <= 0 && y.getHealth() <= 0)
+    		return true;
+    	return false;
+    }
 }

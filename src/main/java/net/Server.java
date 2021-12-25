@@ -25,14 +25,16 @@ public class Server {
 		selector = Selector.open();
 		ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.configureBlocking(false);
-		serverSocketChannel.bind(address);
+		serverSocketChannel.socket().bind(address);
 		serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 		while(true) {
 			if(selector.select() == 0)
 				continue;
+			System.out.println(2);
 			Iterator<SelectionKey> selectedKeys = selector.selectedKeys().iterator();
 			while(selectedKeys.hasNext()) {
 				SelectionKey key = selectedKeys.next();
+				selectedKeys.remove();
 				if(key.isAcceptable()) {
 					SocketChannel socketChannel = serverSocketChannel.accept();
 					socketChannel.configureBlocking(false);
@@ -51,7 +53,7 @@ public class Server {
 						System.arraycopy(byteBuffer.array(), 0, data, 0, len);
 						String s = new String(data);
 						if(s.equals("seed?")){
-							String ans = "seed " + mapSeed;
+							String ans = "seed " + mapSeed + " ";
 							byte[] seed = ans.getBytes();
 							sendAll(seed);
 						}
@@ -68,12 +70,14 @@ public class Server {
 		Iterator<SelectionKey> keys = selector.keys().iterator();
 		while(keys.hasNext()) {
 			SelectionKey key = keys.next();
-			SocketChannel channel = (SocketChannel)key.channel();
-			ByteBuffer buffer = ByteBuffer.allocate(128);
-			buffer.put(data);
-			buffer.flip();
-			channel.write(buffer);
-			buffer.clear();
+			if(key.channel() instanceof SocketChannel) {
+				SocketChannel channel = (SocketChannel)key.channel();
+				ByteBuffer buffer = ByteBuffer.allocate(128);
+				buffer.put(data);
+				buffer.flip();
+				channel.write(buffer);
+				buffer.clear();
+			}
 		}
 	}
 }

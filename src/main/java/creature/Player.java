@@ -33,7 +33,7 @@ public class Player extends Creature {
 	}
 	
 	public synchronized void move(int dir) {
-		if(ispause)
+		if(ispause || health <= 0)
 			return;
 		if(dir < 0 || dir >=4)
 			return;
@@ -61,7 +61,7 @@ public class Player extends Creature {
 	}
 	
 	public synchronized void attack() {
-		if(ispause)
+		if(ispause|| health <= 0)
 			return;
 		if(lastshoottime == -1)
 			lastshoottime = System.currentTimeMillis();
@@ -106,5 +106,4 @@ public class Player extends Creature {
 		if(power < 3)
 			power++;
 	}
-
 }

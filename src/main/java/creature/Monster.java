@@ -9,11 +9,21 @@ import world.*;
 
 public class Monster extends Creature {
 
+	private Random r;
+	
 	public Monster(Color color, World world, PlayScreen screen) {
 		super(color, (char)1, world, screen);
 		health = 5;
 		maxHp = 5;
-		Random r = new Random();
+		r = new Random();
+		power = r.nextInt(3) + 1;
+	}
+	
+	public Monster(Color color, World world, PlayScreen screen, long seed) {
+		super(color, (char)1, world, screen);
+		health = 5;
+		maxHp = 5;
+		r = new Random(seed);
 		power = r.nextInt(3) + 1;
 	}
 
@@ -30,7 +40,6 @@ public class Monster extends Creature {
 			System.out.println("Monster thread error");
 		}finally {
 			screen.deleteMonster(this);
-			Random r = new Random();
 			int chance = r.nextInt(4);
 			int x = getX();
 			int y = getY();
@@ -45,7 +54,6 @@ public class Monster extends Creature {
 	}
 	
 	void action() {
-		Random r = new Random();
 		int n = r.nextInt(5);
 		if(n == 4)
 			attack();

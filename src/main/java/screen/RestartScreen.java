@@ -4,7 +4,7 @@ import asciiPanel.AsciiPanel;
 import java.awt.event.KeyEvent;
 
 public abstract class RestartScreen implements Screen {
-
+	
     @Override
     public abstract void displayOutput(AsciiPanel terminal);
 

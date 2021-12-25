@@ -11,12 +11,12 @@ public class ServerScreen implements Screen {
 	private Server server;
 	
 	public ServerScreen() {
-		server = new Server("localhost", 9093);
+		server = new Server("localhost", 7890);
 	}
 	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		terminal.write("Multi Game Running", 0, 0);
+		terminal.write("Press any key to start the server", 10, 16);
 	}
 
 	@Override

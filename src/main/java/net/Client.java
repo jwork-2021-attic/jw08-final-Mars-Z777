@@ -22,7 +22,7 @@ public class Client {
 		id = i;
 		mapSeed = -1;
 		buffer = ByteBuffer.allocate(128);
-		serverAddress = new InetSocketAddress("localhost", 9093);
+		serverAddress = new InetSocketAddress("localhost", 7890);
 		channel = SocketChannel.open(serverAddress);
 	}
 	
@@ -32,17 +32,16 @@ public class Client {
 		buffer.flip();
 		channel.write(buffer);
 		buffer.clear();
-		mapSeed = -1;
 	}
 	
 	public void read() throws IOException {
 		int len = channel.read(buffer);
 		if(len > 0) {
 			byte[] data = new byte[len];
-			System.arraycopy(buffer, 0, data, 0, len);
+			System.arraycopy(buffer.array(), 0, data, 0, len);
+			buffer.clear();
 			String s = new String(data);
 			handle(s);
-			buffer.clear();
 		}
 	}
 	
@@ -55,8 +54,13 @@ public class Client {
 		else if(tmp[0].equals("action")) {
 			int playerId = Integer.valueOf(tmp[1]);
 			int code = Integer.valueOf(tmp[2]);
-			if(code == 10)
-				screen.start();
+			if(code == 10) {
+				try {
+					screen.start();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			else
 				screen.action(playerId, code);
 		}
@@ -75,7 +79,7 @@ public class Client {
 	}
 	
 	public void action(int code) throws IOException {
-		String data = "action " + id + " " + code;
+		String data = "action " + id + " " + code + " ";
 		write(data);
 	}
 	
