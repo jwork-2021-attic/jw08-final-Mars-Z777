@@ -65,9 +65,17 @@ public class Bullet extends Thing {
 	public void setScreen(PlayScreen p) {
 		screen = p;
 	}
+	
+	public PlayScreen getScreen() {
+		return screen;
+	}
 
     public void setWorld(World w) {
 		world = w;
 	}
+    
+    public World getWorld() {
+    	return world;
+    }
 	
 }

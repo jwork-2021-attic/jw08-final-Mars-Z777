@@ -57,6 +57,14 @@ public abstract class Creature extends Thing implements Runnable, Serializable {
 		return ispause;
 	}
 	
+	public PlayScreen getScreen() {
+		return screen;
+	}
+	
+	public World getWorld() {
+		return world;
+	}
+	
 	public void setScreen(PlayScreen p) {
 		screen = p;
 	}

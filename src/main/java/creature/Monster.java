@@ -34,7 +34,21 @@ public class Monster extends Creature {
 			while(health > 0) {
 				TimeUnit.MILLISECONDS.sleep(500);
 				if(!ispause)
-					action();
+					move(dir);
+				TimeUnit.MILLISECONDS.sleep(500);
+				if(!ispause)
+					move(dir);
+				TimeUnit.MILLISECONDS.sleep(500);
+				if(!ispause)
+					move(dir);
+				TimeUnit.MILLISECONDS.sleep(500);
+				if(!ispause)
+					move(dir);
+				TimeUnit.MILLISECONDS.sleep(500);
+				if(!ispause)
+					attack();
+				// if(!ispause)
+				// 	action();
 			}
 		}catch(InterruptedException e) {
 			System.out.println("Monster thread error");
@@ -70,6 +84,10 @@ public class Monster extends Creature {
 		int status = world.posJudge(x, y);
 		if(status == 1 || status == 5)
 			this.moveTo(x, y);
+		else if(status == 2 || status == -1) {
+			dir = (dir + 1) % 4;
+			move(dir);
+		}
 	}
 	
 	public synchronized void attack() {

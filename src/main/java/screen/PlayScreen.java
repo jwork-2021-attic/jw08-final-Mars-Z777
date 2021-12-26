@@ -49,24 +49,12 @@ public class PlayScreen implements Screen{
 	private boolean isRunning = false;
     
     public PlayScreen(String map) {
-    	win = false;
-    	lose = false;
     	world = new World(map);
     	player = new Player(new Color(255, 0, 0), world, this);
     	world.put(player, 0, 0);
     	finish = new Finish(new Color(255, 0, 0), world);
     	world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
-    	bullets = new CopyOnWriteArrayList<Bullet>();
-    	deleteBullets = new CopyOnWriteArrayList<Bullet>();
-    	props = new CopyOnWriteArrayList<Prop>();
-    	deleteProps = new CopyOnWriteArrayList<Prop>();
-    	monsters = new ArrayList<Monster>();
-    	top = 6;
-    	left = 43;
-    	monsterNum = 15;
-    	ispause = false;
-    	
-    	controller = new GameControl(this);
+    	init();
     	controller.start();
     	for(int i = 0; i < monsterNum; i++)
     		addMonster();
@@ -126,6 +114,12 @@ public class PlayScreen implements Screen{
     	world.put(player3, world.WIDTH - 1, 0);
     	finish = new Finish(new Color(255, 0, 0), world);
     	// world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
+    	init();
+    }
+    
+    public void init() {
+    	win = false;
+    	lose = false;
     	bullets = new CopyOnWriteArrayList<Bullet>();
     	deleteBullets = new CopyOnWriteArrayList<Bullet>();
     	props = new CopyOnWriteArrayList<Prop>();
@@ -133,7 +127,7 @@ public class PlayScreen implements Screen{
     	monsters = new ArrayList<Monster>();
     	top = 6;
     	left = 43;
-    	monsterNum = 15;
+    	monsterNum = 10;
     	ispause = false;
     	controller = new GameControl(this);
     }
@@ -141,11 +135,13 @@ public class PlayScreen implements Screen{
     public void start() throws IOException {
     	if(!isRunning) {
     		controller.start();
-    		// for(int i = 0; i < monsterNum; i++)
-    		// 	addMonster();
+    		for(int i = 0; i < monsterNum; i++)
+    			addMonster(mapSeed);
     		player.setState(false);
-    		player2.setState(false);
-    		player3.setState(false);
+    		if(player2 != null)
+    			player2.setState(false);
+    		if(player3 != null)
+    			player3.setState(false);
     		isRunning = true;
     	}
     }
@@ -398,5 +394,17 @@ public class PlayScreen implements Screen{
     	if(p.getHealth() > 0 && x.getHealth() <= 0 && y.getHealth() <= 0)
     		return true;
     	return false;
+    }
+    
+    public boolean getWin() {
+    	return win;
+    }
+    
+    public boolean getLose() {
+    	return lose;
+    }
+    
+    public long getSeed() {
+    	return mapSeed;
     }
 }
