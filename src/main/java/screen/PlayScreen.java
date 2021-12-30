@@ -86,13 +86,14 @@ public class PlayScreen implements Screen{
     	monsterNum = ms.size();
     	
     	controller = new GameControl(this);
-    	controller.start();
     	for(int i = 0; i < monsterNum; i++) {
     		monsters.get(i).setScreen(this);
     		monsters.get(i).setState(ispause);
     		monsters.get(i).setWorld(w);
-    		addMonster(monsters.get(i));
+    		// addMonster(monsters.get(i));
     	}
+    	
+    	controller.start();
     }
     
     public PlayScreen(int id) throws IOException, InterruptedException{
@@ -115,6 +116,7 @@ public class PlayScreen implements Screen{
     	finish = new Finish(new Color(255, 0, 0), world);
     	// world.put(finish, world.WIDTH - 1, world.HEIGHT - 1);
     	init();
+    	monsterNum = 6;
     }
     
     public void init() {
@@ -320,7 +322,7 @@ public class PlayScreen implements Screen{
     public void addMonster(Monster m) {
     	monsters.add(m);
     	world.put(m, m.getX(), m.getY());
-    	controller.addMonster(m);
+    	// controller.addMonster(m);
     }
     
     public void deleteMonster(Monster m) {

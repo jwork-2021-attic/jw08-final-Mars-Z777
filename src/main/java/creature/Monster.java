@@ -24,7 +24,7 @@ public class Monster extends Creature {
 		health = 5;
 		maxHp = 5;
 		r = new Random(seed);
-		power = r.nextInt(3) + 1;
+		power = 1;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class Monster extends Creature {
 		int status = world.posJudge(x, y);
 		if(status == 1 || status == 5)
 			this.moveTo(x, y);
-		else if(status == 2 || status == -1) {
+		else if(status == 2 || status == -1 || status == 3) {
 			dir = (dir + 1) % 4;
 			move(dir);
 		}
